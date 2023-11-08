@@ -1,0 +1,878 @@
+Q1) DDA
+
+#include<graphics.h>  
+#include<conio.h>  
+#include<stdio.h>  
+void main()  
+{  
+    int gd = DETECT ,gm, i;
+    float x, y,dx,dy,steps;  
+    int x0, x1, y0, y1;  
+    initgraph(&gd, &gm, "C:\\TurboC3\\BGI");
+    setbkcolor(WHITE);  
+    x0 = 100 , y0 = 200, x1 = 500, y1 = 300;  
+    dx = (float)(x1 - x0);  
+    dy = (float)(y1 - y0);  
+    if(dx>=dy)  
+           {  
+        steps = dx;  
+    }  
+    else  
+           {  
+        steps = dy;  
+    }  
+    dx = dx/steps;  
+    dy = dy/steps;  
+    x = x0;  
+    y = y0;  
+    i = 1;  
+    while(i<= steps)  
+    {  
+        putpixel(x, y, RED);  
+        x += dx;  
+        y += dy;  
+        i=i+1;  
+    }  
+    getch();  
+    closegraph();  
+}  
+
+
+Q2) Bresenham's Line
+
+#include<stdio.h>  
+#include<graphics.h>  
+ void main()  
+{  
+    int gd=DETECT, gm x0, y0, x1, y1;
+    int dx,dx,p,x,y;  
+    initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");  
+    printf("Enter co-ordinates ");  
+    scanf("%d%d%d%d", &x0, &y0, &x1, &y1);  
+    dx=x1-x0;  
+    dy=y1-y0;  
+    x=x0;  
+    y=y0;  
+    p=2*dy-dx;  
+    while(x<x1)  
+    {  
+        if(p>=0)  
+        {  
+            putpixel(x,y,7);  
+            y=y+1;  
+            p=p+2*dy-2*dx;  
+        }  
+        else  
+        {  
+            putpixel(x,y,7);  
+            p=p+2*dy;
+         }  
+            x=x+1;  
+        }  
+  getch();
+  closegraph();  
+}  
+
+
+Q3) midpoint circle 
+
+
+#include <stdio.h>
+#include <conio.h>
+#include <math.h>
+
+#include <graphics.h>
+void main()
+{
+    int gd=DETECT,gm;
+    int xcenter,ycenter,radius;
+    int p,x,y;
+    initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+    x=0;
+    printf("n Enter The Radius Value:");
+    scanf("%d",&radius);
+    y=radius;
+    printf("n Enter The x center and y center Values: ");
+    scanf("%d%d",&xcenter,&ycenter);
+    plotpoints(xcenter,ycenter,x,y);
+    p=1-radius;
+    while(x<y)
+    {
+        if(p<0)
+        x=x+1;
+        else
+        {
+            x=x+1;
+            y=y-1;
+        }
+        if(p<0)
+        p=p+2*x+1;
+        else p=p+2*(x-y)+1;
+        plotpoints(xcenter,ycenter,x,y);
+    }
+    getch();
+}
+int plotpoints(int xcenter,int ycenter,int x,int y)
+{
+    putpixel(xcenter+x,ycenter+y,1);
+    putpixel(xcenter-x,ycenter+y,1);
+    putpixel(xcenter+x,ycenter-y,1);
+    putpixel(xcenter-x,ycenter-y,1);
+    putpixel(xcenter+y,ycenter+x,1);
+    putpixel(xcenter-y,ycenter+x,1);
+    putpixel(xcenter+y,ycenter-x,1);
+    putpixel(xcenter-y,ycenter-x,1);
+    return 0;
+}
+
+
+Q4) midpoint ellipse
+
+#include<stdio.h>
+#include<graphics.h>
+void main ()
+{
+int gd=DETECT,gm;
+float p,x,y,xc,yc,a,b;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+cleardevice();
+printf("Enter xc, yc:\n");
+scanf("%f%f",&xc,&yc);
+printf("Enter a, b:\n");
+scanf("%f%f",&a,&b);
+x=0;
+y=b;
+//Region 1
+p=(b*b)-(a*a*b)+(0.25*a*a);
+do
+{
+  putpixel(xc+x,yc+y,WHITE);
+  putpixel(xc+x,yc-y,WHITE);
+  putpixel(xc-x,yc+y,WHITE);
+  putpixel(xc-x,yc-y,WHITE);
+  if(p<0)
+  {
+   x=x+1;
+   p=p+2*b*b*x+b*b;
+  }
+  else
+  {
+   x=x+1;
+   y=y-1;
+   p=p+2*b*b*x-2*a*a*y+b*b;
+  }
+}while(2*b*b*x<2*a*a*y);
+//Region 2
+p=(b*b*(x+0.5)*(x+0.5))+((y-1)*(y-1)*a*a-a*a*b*b);
+do
+{
+  putpixel(xc+x,yc+y,WHITE);
+  putpixel(xc+x,yc-y,WHITE);
+  putpixel(xc-x,yc+y,WHITE);
+  putpixel(xc-x,yc-y,WHITE);
+  if(p>0)
+  {
+   y=y-1;
+   p=p-2*a*a*y+a*a;
+  }
+  else
+  {
+   x=x+1;
+   y=y-1;
+   p=p-2*a*a*y+2*b*b*x+a*a;
+  }
+}while(y!=0);
+getch();
+closegraph();
+restorecrtmode();
+}
+
+
+
+Q5) flood fill
+
+#include<stdio.h>  
+#include<conio.h>  
+#include<graphics.h>  
+void ffill(int x,int y,int n, int o)  
+{  
+if(getpixel(x,y)!=o && getpixel(x,y)!=n)  
+{  
+delay(1);  
+putpixel(x, y, n);  
+ffill(x+1, y, n, o);  
+ffill(x-1, y, n, o);  
+ffill(x, y+1, n, o);  
+ffill(x, y-1, n, o); 
+ffill(x-1, y-1, n, o);
+ffill(x-1, y+1, n, o);
+ffill(x+1, y-1, n, o);
+ffill(x+1, y+1, n, o);
+}  
+}  
+void main()  
+{  
+int gd=DETECT, gm;  
+initgraph(&gd,&gm,"C:/TURBOC3/BGI");  
+rectangle(100, 100, 50, 50);  
+ffill(51, 51, WHITE, GREEN);  
+getch(); 
+closegraph(); 
+} 
+
+
+Q6) boundary fill
+
+#include<stdio.h>
+#include<conio.h>
+#include<graphics.h>
+void bfill(int x, int y, int o, int n)
+{
+if(getpixel(x,y)!=o && getpixel(x,y)!=n)
+{
+putpixel(x, y, n);
+delay(1);
+bfill(x+1, y, o, n);
+bfill(x, y+1, o, n);
+bfill(x-1, y, o, n);
+bfill(x, y-1, o, n);
+bfill(x-1, y-1, o, n);
+bfill(x-1, y+1, o ,n);
+bfill(x+1, y-1, o, n);
+bfill(x+1, y+1, o, n);
+}
+}
+void main()
+{
+int gd = DETECT,gm;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+rectangle(100, 100, 50, 50);
+bfill(51, 51 , WHITE, RED);
+getch();
+closegraph();
+}
+
+
+
+Q7) character generation 
+
+#include <stdio.h>
+#include <conio.h>
+#include <graphics.h>
+void main()
+{
+    int i,j,k,x,y;
+    int gd=DETECT,gm;//DETECT is macro defined in graphics.h
+    /* ch1 ch2 ch3 ch4 are character arrays that display alphabets */
+    int ch1[][10]={ {1,1,1,1,1,1,1,1,1,1},
+                    {1,1,1,1,1,1,1,1,1,1},
+                    {0,0,0,0,1,1,0,0,0,0},
+                    {0,0,0,0,1,1,0,0,0,0},
+                    {0,0,0,0,1,1,0,0,0,0},
+                    {0,0,0,0,1,1,0,0,0,0},
+                    {0,0,0,0,1,1,0,0,0,0},
+                    {0,1,1,0,1,1,0,0,0,0},
+                    {0,1,1,0,1,1,0,0,0,0},
+                    {0,0,1,1,1,0,0,0,0,0}};
+    int ch2[][10]={ {0,0,0,1,1,1,1,0,0,0},
+                    {0,0,1,1,1,1,1,1,0,0},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {0,0,1,1,1,1,1,1,0,0},
+                    {0,0,0,1,1,1,1,0,0,0}};
+    int ch3[][10]={ {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,1,1,1,1,1,1,1,1},
+                    {1,1,1,1,1,1,1,1,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,0,0,0,0,0,0,1,1}};
+    int ch4[][10]={ {1,1,0,0,0,0,0,0,1,1},
+                    {1,1,1,1,0,0,0,0,1,1},
+                    {1,1,0,1,1,0,0,0,1,1},
+                    {1,1,0,1,1,0,0,0,1,1},
+                    {1,1,0,0,1,1,0,0,1,1},
+                    {1,1,0,0,1,1,0,0,1,1},
+                    {1,1,0,0,0,1,1,0,1,1},
+                    {1,1,0,0,0,1,1,0,1,1},
+                    {1,1,0,0,0,0,1,1,1,1},
+                    {1,1,0,0,0,0,0,0,1,1}};
+    initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+    setbkcolor(LIGHTGRAY);//set color of background to darkgray
+    for(k=0;k<4;k++)
+    { 
+        for(i=0;i<10;i++)
+        {
+            for(j=0;j<10;j++)
+            {
+                if(k==0)
+                { 
+                    if(ch1[i][j]==1)
+                    putpixel(j+250,i+230,RED);
+                }
+                if(k==1)
+                { 
+                    if(ch2[i][j]==1)
+                    putpixel(j+300,i+230,RED);
+                }
+                if(k==2)
+                { 
+                    if(ch3[i][j]==1)
+                    putpixel(j+350,i+230,RED);
+                }
+                if(k==3)
+                { 
+                    if(ch4[i][j]==1)
+                    putpixel(j+400,i+230,RED);
+                }
+            }
+            delay(200);
+        }
+    }
+    getch();
+    closegraph();
+}
+
+Q8) 2D Transformation
+
+
+#include<stdio.h>
+#include<graphics.h>
+#include<stdlib.h>
+#include<math.h>
+#include<conio.h>
+int x1,y1,x2,y2;
+void translation()
+{
+int tx,ty,xn1,xn2,yn1,yn2;
+printf("\n Enter the translation\n");
+scanf("%d%d",&tx,&ty);
+cleardevice();
+outtextxy(400,100,"TRANSLATION");
+xn1=x1+tx;
+yn1=y1+ty;
+xn2=x2+tx;
+yn2=y2+ty;
+line(x1,y1,x2,y2);
+line(xn1,yn1,xn2,yn2);
+getch();
+}
+ 
+void scaling()
+{
+int xn1,xn2,yn1,yn2;
+float sx,sy;
+printf("Enter the scaling factor");
+scanf("%f%f",&sx,&sy);
+cleardevice();
+outtextxy(300,200,"SCALING");
+xn1=x1*sx;
+yn1=y1*sy;
+xn2=x2*sx;
+yn2=y2*sy;
+line(x1,y1,x2,y2);
+line(xn1,yn1,xn2,yn2);
+getch();
+}
+ 
+void rotation()
+{
+int r;
+float rx,xn1,xn2,yn1,yn2;
+printf("\n enter the angle for rotation");
+scanf("%d",&r);
+cleardevice();
+outtextxy(500,200,"ROTATION");
+rx=(r*3.14)/180;
+xn1=x1*cos(rx)-y1*sin(rx);
+yn1=y1*cos(rx)+x1*sin(rx);
+xn2=x2*cos(rx)-y2*sin(rx);
+yn2=y2*cos(rx)+x2*sin(rx);
+line(x1,y1,x2,y2);
+line(xn1,yn1,xn2,yn2);
+getch();
+}
+ 
+void shearing()
+{
+float sh;
+float xn1,xn2,yn1,yn2;
+printf("\n Enter the value for shearing");
+scanf("%f",&sh);
+cleardevice();
+outtextxy(500,100,"SHEARING");
+xn1=x1+sh*y1;
+yn1=y1;
+xn2=x2+sh*y2;
+yn2=y2;
+line(x1,y1,x2,y2);
+line(xn1,yn1,xn2,yn2);
+getch();
+}
+ 
+void reflection()
+{
+int xn1,xn2,yn1,yn2;
+cleardevice();
+outtextxy(300,100,"REFLECTION");
+if((x1<y1)^(x2<y2))
+{
+xn1=x1+50;
+xn2=x2+50;
+yn1=y1;
+yn2=y2;
+}
+else
+{
+xn1=x1;
+xn2=x2;
+yn1=y1+50;
+yn2=y2+50;
+}
+line(x1,y1,x2,y2);
+line(xn1,yn1,xn2,yn2);
+getch();
+}
+ 
+void get()
+{
+printf("\n Enter the coordinates x1,y1,x2,y2");
+scanf("%d%d%d%d",&x1,&y1,&x2,&y2);
+outtextxy(200,100,"ORIGINAL OBJECT");
+line(x1,y1,x2,y2);
+getch();
+}
+ 
+void main()
+{
+int ch,gd=DETECT,gm;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+get();
+do
+{
+cleardevice();
+outtextxy(10,10,"1)TRANSLATION");
+outtextxy(10,20,"2)SCALING");
+outtextxy(10,30,"3)ROTATION");
+outtextxy(10,40,"4)SHEARING");
+outtextxy(10,50,"5)REFLECTION");
+outtextxy(10,60,"6)EXIT");
+outtextxy(10,70,"ENTER UR CHOICE:");
+scanf("%d",&ch);
+switch(ch)
+{
+case 1:
+translation();
+break;
+case 2:
+scaling();
+break;
+case 3:
+rotation();
+break;
+case 4:
+shearing();
+break;
+case 5:
+reflection();
+break;
+case 6:
+exit(0);
+}
+}while(ch<6);
+}
+
+
+Q9) 
+A.) COHEN 
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<graphics.h>
+#include<dos.h>
+ 
+typedef struct coordinate
+{
+int x,y;
+char code[4];
+}PT;
+ 
+void drawwindow();
+void drawline(PT p1,PT p2);
+PT setcode(PT p);
+int visibility(PT p1,PT p2);
+PT resetendpt(PT p1,PT p2);
+ 
+void main()
+{
+int gd=DETECT,v,gm;
+PT p1,p2,p3,p4,ptemp;
+printf("\nEnter x1 and y1\n");
+scanf("%d %d",&p1.x,&p1.y);
+printf("\nEnter x2 and y2\n");
+scanf("%d %d",&p2.x,&p2.y);
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+drawwindow();
+delay(500);
+drawline(p1,p2);
+delay(500);
+cleardevice();
+delay(500);
+p1=setcode(p1);
+p2=setcode(p2);
+v=visibility(p1,p2);
+delay(500);
+switch(v)
+{
+case 0: drawwindow();
+delay(500);
+drawline(p1,p2);
+break;
+case 1: drawwindow();
+delay(500);
+break;
+case 2: p3=resetendpt(p1,p2);
+p4=resetendpt(p2,p1);
+drawwindow();
+delay(500);
+drawline(p3,p4);
+break;
+}
+delay(5000);
+closegraph();
+}
+ 
+void drawwindow()
+{
+line(150,100,450,100);
+line(450,100,450,350);
+line(450,350,150,350);
+line(150,350,150,100);
+}
+ 
+void drawline(PT p1,PT p2)
+{
+line(p1.x,p1.y,p2.x,p2.y);
+}
+ 
+PT setcode(PT p) //for setting the 4 bit code
+{
+PT ptemp;
+if(p.y<100)
+ptemp.code[0]='1'; //Top
+else
+ptemp.code[0]='0';
+if(p.y>350)
+ptemp.code[1]='1'; //Bottom
+else
+ptemp.code[1]='0';
+if(p.x>450)
+ptemp.code[2]='1'; //Right
+else
+ptemp.code[2]='0';
+if(p.x<150)
+ptemp.code[3]='1'; //Left
+else
+ptemp.code[3]='0';
+ptemp.x=p.x;
+ptemp.y=p.y;
+return(ptemp);
+}
+ 
+int visibility(PT p1,PT p2)
+{
+int i,flag=0;
+for(i=0;i<4;i++)
+{
+if((p1.code[i]!='0') || (p2.code[i]!='0'))
+flag=1;
+}
+if(flag==0)
+return(0);
+for(i=0;i<4;i++)
+{
+if((p1.code[i]==p2.code[i]) && (p1.code[i]=='1'))
+flag='0';
+}
+if(flag==0)
+return(1);
+return(2);
+}
+ 
+PT resetendpt(PT p1,PT p2)
+{
+PT temp;
+int x,y,i;
+float m,k;
+if(p1.code[3]=='1')
+x=150;
+if(p1.code[2]=='1')
+x=450;
+if((p1.code[3]=='1') || (p1.code[2]=='1'))
+{
+m=(float)(p2.y-p1.y)/(p2.x-p1.x);
+k=(p1.y+(m*(x-p1.x)));
+temp.y=k;
+temp.x=x;
+for(i=0;i<4;i++)
+temp.code[i]=p1.code[i];
+if(temp.y<=350 && temp.y>=100)
+return (temp);
+}
+if(p1.code[0]=='1')
+y=100;
+if(p1.code[1]=='1')
+y=350;
+if((p1.code[0]=='1') || (p1.code[1]=='1'))
+{
+m=(float)(p2.y-p1.y)/(p2.x-p1.x);
+k=(float)p1.x+(float)(y-p1.y)/m;
+temp.x=k;
+temp.y=y;
+for(i=0;i<4;i++)
+temp.code[i]=p1.code[i];
+return(temp);
+}
+else
+return(p1);
+}
+
+
+B.) LIANG BARSKY
+
+#include<stdio.h>
+#include<graphics.h>
+#include<math.h>
+#include<dos.h>
+ 
+void main()
+{
+int i,gd=DETECT,gm;
+int x1,y1,x2,y2,xmin,xmax,ymin,ymax,xx1,xx2,yy1,yy2,dx,dy;
+float t1,t2,p[4],q[4],temp;
+x1=120;
+y1=120;
+x2=300;
+y2=300;
+xmin=100;
+ymin=100;
+xmax=250;
+ymax=250;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+rectangle(xmin,ymin,xmax,ymax);
+dx=x2-x1;
+dy=y2-y1;
+p[0]=-dx;
+p[1]=dx;
+p[2]=-dy;
+p[3]=dy;
+q[0]=x1-xmin;
+q[1]=xmax-x1;
+q[2]=y1-ymin;
+q[3]=ymax-y1;
+for(i=0;i<4;i++)
+{
+if(p[i]==0)
+{
+printf("line is parallel to one of the clipping boundary");
+if(q[i]>=0)
+{
+if(i<2)
+{
+if(y1<ymin)
+{
+y1=ymin;
+}
+if(y2>ymax)
+{
+y2=ymax;
+}
+line(x1,y1,x2,y2);
+}
+if(i>1)
+{
+if(x1<xmin)
+{
+x1=xmin;
+}
+if(x2>xmax)
+{
+x2=xmax;
+}
+line(x1,y1,x2,y2);
+}
+}
+}
+}
+t1=0;
+t2=1;
+for(i=0;i<4;i++)
+{
+temp=q[i]/p[i];
+if(p[i]<0)
+{
+if(t1<=temp)
+t1=temp;
+}
+else
+{
+if(t2>temp)
+t2=temp;
+}
+}
+if(t1<t2)
+{
+xx1 = x1 + t1 * p[1];
+xx2 = x1 + t2 * p[1];
+yy1 = y1 + t1 * p[3];
+yy2 = y1 + t2 * p[3];
+line(xx1,yy1,xx2,yy2);
+}
+delay(5000);
+closegraph();
+}
+
+
+Q10) sutherland hodgeman
+
+#include<stdio.h>
+#include<graphics.h>
+#include<conio.h>
+#include<stdlib.h>
+int main()
+{
+ 	int gd,gm,n,*x,i,k=0;
+	
+	int w[]={220,140,420,140,420,340,220,340,220,140};
+	detectgraph(&gd,&gm); 
+	initgraph(&gd,&gm,"C:\\TURBOC3\\BGI"); 
+	printf("Window:-");
+	setcolor(RED); 
+	drawpoly(5,w); 
+	printf("Enter the no. of vertices of polygon: ");
+	scanf("%d",&n);
+	x = malloc(n*2+1);
+	printf("Enter the coordinates of points:\n");
+	k=0;
+	for(i=0;i<n*2;i+=2) 
+	{
+		printf("(x%d,y%d): ",k,k);
+		scanf("%d,%d",&x[i],&x[i+1]);
+		k++;
+	}
+	x[n*2]=x[0];
+	x[n*2+1]=x[1];
+	setcolor(WHITE);
+	drawpoly(n+1,x);
+	printf("\nPress a button to clip a polygon..");
+	getch();
+ 	setcolor(RED);
+ 	drawpoly(5,w);
+ 	setfillstyle(SOLID_FILL,BLACK);
+ 	floodfill(2,2,RED);
+ 	gotoxy(1,1); 
+ 	printf("\nThis is the clipped polygon..");
+ 	getch();
+
+ 	cleardevice();
+ 	closegraph();
+ 	return 0;
+}
+
+
+Q11) bezier curve
+
+#include<graphics.h>
+#include<math.h>
+#include<conio.h>
+#include<stdio.h>
+void main()
+{
+int x[4],y[4],i;
+double put_x,put_y,t;
+int gr=DETECT,gm;
+initgraph(&gr,&gm,"C:\\TURBOC3\\BGI");
+printf("\n****** Bezier Curve ***********");
+printf("\n Please enter x and y coordinates ");
+for(i=0;i<4;i++)                 
+{
+scanf("%d%d",&x[i],&y[i]);
+putpixel(x[i],y[i],3);                
+}
+ 
+for(t=0.0;t<=1.0;t=t+0.001)          
+{
+put_x = pow(1-t,3)*x[0] + 3*t*pow(1-t,2)*x[1] + 3*t*t*(1-t)*x[2] + pow(t,3)*x[3]; // Formula to draw curve
+put_y =  pow(1-t,3)*y[0] + 3*t*pow(1-t,2)*y[1] + 3*t*t*(1-t)*y[2] + pow(t,3)*y[3];
+putpixel(put_x,put_y, WHITE);            
+}
+getch();
+closegraph();
+} 
+
+
+Q12) fractal 
+
+#include<stdio.h>
+#include<math.h>
+#include<graphics.h>
+#include<conio.h>
+  int a;
+ void drawfern(int x,int y,int l,int arg,int n)
+{
+int x1,y1,i;
+int l1,xpt,ypt;
+ 
+if(n>0&&!kbhit())
+{
+x1=(int)(x-l*sin(arg*3.14/180));
+y1=(int)(y-l*cos(arg*3.14/180));
+line(x,y,x1,y1);
+l1=(int)(l/5);
+for(i=1;i<6;i++)
+  {
+  xpt=(int)(x-i*l1*sin(arg*3.14/180));
+  ypt=(int)(y-i*l1*cos(arg*3.14/180));
+  drawfern(xpt,ypt,(int)(l/(i+1)),arg+a,n-1);
+  drawfern(xpt,ypt,(int)(l/(i+1)),arg-a,n-1);
+  }
+}
+}
+ 
+ 
+ 
+void main()
+{
+int gd=DETECT,gm,x,y,l;
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+x=getmaxx()/2;
+y=getmaxy()/2;
+l=150;
+a=45;
+setcolor(YELLOW);
+drawfern(x,y,l,0,5);
+getch();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
